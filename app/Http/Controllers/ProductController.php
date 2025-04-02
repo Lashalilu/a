@@ -24,12 +24,6 @@ class ProductController extends Controller
     {
         $products = $this->indexProductService->index($request);
 
-        // $products = Product::query() 
-        // ->search($request->keyword)
-        // ->authUserSmartReturn()
-        // ->orderBy('id', 'desc')
-        // ->paginate($request->per_page ?? 10);
-        
         return GetProductResource::collection($products);
     }
 
