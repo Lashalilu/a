@@ -1,0 +1,23 @@
+FROM laravelsail/php82-composer:latest
+
+USER root
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      autoconf \
+      pkg-config \
+      build-essential \
+      libzip-dev \
+      unzip \
+      libbrotli-dev \
+    && pecl install swoole \
+    && docker-php-ext-install pdo_mysql zip \
+    && docker-php-ext-enable swoole
+
+RUN id -u sail || useradd -m sail -u 1000
+
+USER sail
+WORKDIR /var/www/html
+
+EXPOSE 8080
+
+CMD ["php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=8080"]
