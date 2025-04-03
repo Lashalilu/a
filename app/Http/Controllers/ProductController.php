@@ -33,7 +33,16 @@ class ProductController extends Controller
 
         DB::beginTransaction();
 
-        $product = Product::create($data);
+        $product = Product::create([
+            'price' => $data['price'],
+            'stock' => $data['stock'],
+        ]);
+
+        foreach ($data['name'] as $locale => $name) {
+            $product->translateOrNew($locale)->name = $name;
+            $product->translateOrNew($locale)->description = $data['description'][$locale] ?? '';
+        }
+        $product->save();
 
         UserProduct::create([
             'user_id' => auth()->user()->id,
@@ -42,10 +51,6 @@ class ProductController extends Controller
 
         DB::commit();
 
-        return response()->json(
-            [
-                "message" => "Product created successfully",
-            ]
-        );
+        return response()->json(["message" => "Product created successfully"]);
     }
 }

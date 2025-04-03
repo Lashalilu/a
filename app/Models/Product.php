@@ -4,14 +4,16 @@ namespace App\Models;
 
 use App\Traits\ProductTrait;
 use Illuminate\Database\Eloquent\Model;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 
-class Product extends Model
+class Product extends Model implements TranslatableContract
 {
-    use ProductTrait;
+    use ProductTrait, Translatable;
+
+    public $translatedAttributes = ['name', 'description'];
 
     protected $fillable = [
-        'name',
-        'description',
         'price',
         'stock',
         'image',
