@@ -13,9 +13,9 @@ Route::middleware('throttle:api')->group(function () {
 
 Route::middleware(['auth:sanctum', \App\Http\Middleware\SetLocale::class])->group(function () {
 
-    Route::apiResource('roles', RoleController::class);
+    Route::apiResource('roles', RoleController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 
-    Route::apiResource('products', ProductController::class);
+    Route::apiResource('products', ProductController::class)->only(['index', 'store']);
 
     Route::post('assign-role-to-user', AssignRoleToUserController::class);
 });
