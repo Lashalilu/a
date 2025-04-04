@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AssignRoleToUserController;
+use App\Http\Controllers\CategoryController;
 
 Route::middleware('throttle:api')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
@@ -16,6 +17,8 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\SetLocale::class])->grou
     Route::apiResource('roles', RoleController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 
     Route::resource('products', ProductController::class)->except(['create']);
+
+    Route::resource('categories', CategoryController::class)->except(['create']);
 
     Route::post('assign-role-to-user', AssignRoleToUserController::class);
 });
