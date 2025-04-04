@@ -23,4 +23,9 @@ class Product extends Model implements TranslatableContract
     {
         return $this->hasMany(\App\Models\UserSearch::class);
     }
+
+    public function additionDetails()
+    {
+        return $this->hasMany(ProductAdditionDetail::class);
+    }
 }

@@ -15,7 +15,7 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\SetLocale::class])->grou
 
     Route::apiResource('roles', RoleController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
 
-    Route::apiResource('products', ProductController::class)->only(['index', 'store']);
+    Route::resource('products', ProductController::class)->except(['create']);
 
     Route::post('assign-role-to-user', AssignRoleToUserController::class);
 });

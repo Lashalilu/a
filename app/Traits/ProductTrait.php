@@ -7,10 +7,15 @@ trait ProductTrait
     public function scopeSearch($query, $keyword)
     {
         if ($keyword) {
-            return $query->where('name', 'like', '%' . $keyword . '%')
-                ->orWhere('description', 'like', '%' . $keyword . '%')
+            return $query
+                ->whereTranslationLike('name', '%' . $keyword . '%')
+                ->orWhereTranslationLike('description', '%' . $keyword . '%')
                 ->orWhere('price', 'like', '%' . $keyword . '%')
-                ->orWhere('stock', 'like', '%' . $keyword . '%');
+                ->orWhere('stock', 'like', '%' . $keyword . '%')
+                ->orWhereHas('additionDetails', function ($q) use ($keyword) {
+                    $q->whereTranslationLike('detail_key', '%' . $keyword . '%')
+                        ->orWhereTranslationLike('value', '%' . $keyword . '%');
+                });
         }
 
         return $query;
@@ -31,13 +36,17 @@ trait ProductTrait
                 $keyword = $keywordRecord->keyword;
                 $weight = $keywordRecord->total_quantity;
                 $escaped = addslashes($keyword);
-                $scoreParts[] = "IF(name LIKE '%{$escaped}%' OR description LIKE '%{$escaped}%', {$weight}, 0)";
+                $scoreParts[] = "IF(pt.name LIKE '%{$escaped}%' OR pt.description LIKE '%{$escaped}%', {$weight}, 0)";
             }
             $scoreSql = implode(' + ', $scoreParts);
 
-            return $query->selectRaw("products.*, ({$scoreSql}) as relevance")
+            return $query->join('product_translations as pt', function ($join) {
+                $join->on('products.id', '=', 'pt.product_id')
+                    ->where('pt.locale', '=', config('app.locale'));
+            })
+                ->selectRaw("products.*, ({$scoreSql}) as relevance")
                 ->orderByDesc('relevance')
-                ->orderByDesc('id');
+                ->orderByDesc('products.id');
         }
 
         return $query;
