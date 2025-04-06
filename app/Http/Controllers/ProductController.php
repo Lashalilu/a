@@ -43,8 +43,8 @@ class ProductController extends Controller
     }
 
     public function show(Product $product)
-    {
-        return new GetProductResource($product);
+    {        
+        return new GetProductResource($product->load('category'));
     }
 
     public function edit(Product $product)

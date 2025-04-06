@@ -13,6 +13,7 @@ class StoreOrUpdateProductService
         $product = Product::create([
             'price' => $data['price'],
             'stock' => $data['stock'],
+            'category_id' => $data['category_id'],
         ]);
 
         foreach ($data['name'] as $locale => $name) {
@@ -49,6 +50,7 @@ class StoreOrUpdateProductService
         $product->update([
             'price' => $data['price'],
             'stock' => $data['stock'],
+            'category_id' => $data['category_id'],
         ]);
 
         foreach ($data['name'] as $locale => $name) {

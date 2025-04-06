@@ -23,6 +23,8 @@ class GetProductResource extends JsonResource
             'stock' => $this->stock,
             'created_at' => $this->created_at,
             'additional_details' => ProductAdditionalDetailResource::collection($this->additionDetails),
+            'category' => $this->category?->name,
+            'category_id' => $this->category_id,
         ];
     }
 }

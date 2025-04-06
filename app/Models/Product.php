@@ -6,6 +6,10 @@ use App\Traits\ProductTrait;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use App\Models\UserSearch;
+use App\Models\Category;
+use App\Models\ProductAdditionDetail;
+
 
 class Product extends Model implements TranslatableContract
 {
@@ -17,15 +21,21 @@ class Product extends Model implements TranslatableContract
         'price',
         'stock',
         'image',
+        'category_id',
     ];
 
     public function userSearchHistory()
     {
-        return $this->hasMany(\App\Models\UserSearch::class);
+        return $this->hasMany(UserSearch::class);
     }
 
     public function additionDetails()
     {
         return $this->hasMany(ProductAdditionDetail::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class)->where('is_active', 1);
     }
 }

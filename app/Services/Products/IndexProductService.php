@@ -18,29 +18,29 @@ class IndexProductService
             if (auth()->check()) {
                 LogUserSearch::dispatch(auth()->id(), $request->keyword);
             }
-            
+
             $products = Product::query()
-                ->with('additionDetails.translations')
+                ->with(['additionDetails.translations', 'category.translations'])
                 ->search($request->keyword)
                 ->orderByDesc('id')
                 ->paginate($perPage);
-            
+
             return $products;
         }
 
         $keywordLimit = 12;
         $newestLimit = $perPage - $keywordLimit;
-        
+
         $user = auth()->user();
         if ($user && $user->userSearchHistory()->exists()) {
             $keywordProducts = Product::query()
-                ->with('additionDetails.translations')
+                ->with(['additionDetails.translations', 'category.translations'])
                 ->authUserSmartReturn()
                 ->limit($keywordLimit)
                 ->get();
 
             $newestProducts = Product::query()
-                ->with('additionDetails.translations')
+                ->with(['additionDetails.translations', 'category.translations'])
                 ->whereNotIn('id', $keywordProducts->pluck('id'))
                 ->orderByDesc('id')
                 ->limit($newestLimit)
@@ -57,7 +57,7 @@ class IndexProductService
             );
         } else {
             $products = Product::query()
-                ->with('additionDetails.translations')
+                ->with(['additionDetails.translations', 'category.translations'])
                 ->orderByDesc('id')
                 ->paginate($perPage);
         }

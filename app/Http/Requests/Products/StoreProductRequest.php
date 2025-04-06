@@ -33,6 +33,7 @@ class StoreProductRequest extends FormRequest
             'details.*.detail_key.*' => 'required|string|max:255',
             'details.*.value' => 'required_with:details|array',
             'details.*.value.*' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
         ];
     }
 }
