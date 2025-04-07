@@ -25,6 +25,7 @@ class GetProductResource extends JsonResource
             'additional_details' => ProductAdditionalDetailResource::collection($this->additionDetails),
             'category' => $this->category?->name,
             'category_id' => $this->category_id,
+            'tags' => ProductTagsResource::collection($this->productTags),
         ];
     }
 }
